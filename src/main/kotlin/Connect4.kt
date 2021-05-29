@@ -1,5 +1,3 @@
-import java.util.Scanner
-
 class Connect4 {
 
     companion object {

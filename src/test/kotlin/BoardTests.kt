@@ -68,4 +68,18 @@ class BoardTests {
         println (board)
         println()
     }
+
+    /**
+     * Test we stop dopping if the column is full
+     */
+    @Test
+    fun dropper3() {
+        val board = Board (1, 5)
+        assertTrue { board.drop(0, Board.Cell.State.GREEN) }
+        assertTrue { board.drop(0, Board.Cell.State.GREEN) }
+        assertTrue { board.drop(0, Board.Cell.State.GREEN) }
+        assertTrue { board.drop(0, Board.Cell.State.GREEN) }
+        assertTrue { board.drop(0, Board.Cell.State.GREEN) }
+        assertFalse { board.drop(0, Board.Cell.State.GREEN) }
+    }
 }

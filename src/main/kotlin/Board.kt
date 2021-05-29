@@ -42,16 +42,19 @@ class Board(val columns: Int, val rows: Int) {
         }
 
         override fun toString() = m_val.toString()
+
+        fun empty() = m_val == State.EMPTY
     }
 
     fun cell(x: Int, y: Int): Cell = grid[x][y]
 
     /**
+     * Simulate dropping a piece into the board
      *
      * @return Was it a legal move or not
      */
     fun drop(x: Int, player: Cell.State): Boolean {
-        if (!grid[x][0].fallThrough()) {
+        if (!grid[x][0].empty()) {
             return false
         }
 
