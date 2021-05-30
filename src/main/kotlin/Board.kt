@@ -8,7 +8,12 @@ class Board(val columns: Int, val rows: Int) {
      */
     val grid: Array<Array<Cell>> = Array(columns) { i -> Array(rows) { j -> Cell(i, j, this) } }
 
-    class Cell(val m_x: Int, val m_y: Int, val board: Board?, var m_val: State = State.EMPTY) {
+    class Cell(
+        private val x: Int,
+        private val y: Int,
+        private val board: Board?,
+        var m_val: State = State.EMPTY
+    ) {
         enum class State {
             EMPTY {
                 override fun toString() = "🟡"
@@ -21,23 +26,26 @@ class Board(val columns: Int, val rows: Int) {
             }
         }
 
-        fun coords(): Pair<Int, Int> = Pair(m_x, m_y)
+        fun coords(): Pair<Int, Int> = Pair(x, y)
 
         /**
          * @return true if a token would fall through to the cell below
          */
         fun fallThrough(): Boolean {
             return board?.let {
-                !(m_y >= board.rows - 1 || board.grid[m_x][m_y+1].m_val != State.EMPTY)
+                !(y >= board.rows - 1 || board.grid[x][y+1].m_val != State.EMPTY)
             } ?: false
         }
 
+        /**
+         * @return the cell below this cell in the grid
+         */
         fun below(): Cell? {
             return board?.let {
-                if (m_y >= board.rows) {
+                if (y >= board.rows) {
                     null
                 }
-                board.grid[m_x][m_y + 1]
+                board.grid[x][y + 1]
             }
         }
 

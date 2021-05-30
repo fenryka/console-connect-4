@@ -1,7 +1,7 @@
 import kotlin.math.*
 
-class Game (val win: Int, columns: Int, rows: Int) {
-    var board = Board (columns, rows)
+class Game (private val win: Int, columns: Int, rows: Int) {
+    private var board = Board (columns, rows)
     private val offset = win -1
 
     fun playerOneMove (column: Int) : Boolean = board.drop(column, Board.Cell.State.PURPLE)
@@ -9,37 +9,61 @@ class Game (val win: Int, columns: Int, rows: Int) {
 
     override fun toString() = board.toString()
 
-    fun cellWin(column: Int, row: Int) : Boolean {
-        println ("Cell Win $column, $row")
-        val left = max (0, column - offset)
-        val top = max (0, row - offset)
-        val right = min (board.columns - 1, column + offset)
-        val bottom = min (board.rows - 1, row + offset)
+    /**
+     * Convienience class for tracking the state of a token run in the board
+     * for use in determinign if someone has won
+     */
+    data class Counter (
+        var currPlayer: Board.Cell.State? = null,
+        var count : Int = 0)
 
-        println ("$left, $top, $right, $bottom")
+    private fun count (cell: Board.Cell, counter: Counter) : Boolean {
+        val v = cell.m_val
 
-        // horazontal win
-        var currPlayer : Board.Cell.State? = null
-        var count = 0
-        for (x in left..right) {
-            val v = board.grid[x][row].m_val
-            if (v == Board.Cell.State.EMPTY ) {
+        counter.apply {
+            if (v == Board.Cell.State.EMPTY) {
                 currPlayer = null
                 count = 0
             } else {
-                if (currPlayer == null) {
-                    currPlayer = v
-                    count = 1
-                } else if (currPlayer == v) {
-                    count += 1
-                } else {
-                    currPlayer = v
-                    count = 1
+                when (currPlayer) {
+                    null -> {
+                        currPlayer = v
+                        count = 1
+                    }
+                    v -> {
+                        count += 1
+                    }
+                    else -> {
+                        currPlayer = v
+                        count = 1
+                    }
                 }
 
                 if (count == win) {
                     return true
                 }
+            }
+        }
+        return false
+    }
+
+    fun cellWin(column: Int, row: Int) : Boolean {
+        val left = max (0, column - offset)
+        val top = max (0, row - offset)
+        val right = min (board.columns - 1, column + offset)
+        val bottom = min (board.rows - 1, row + offset)
+
+        // horazontal win
+        Counter().apply {
+            for (x in left..right) {
+                if (count(board.grid[x][row], this)) return true
+            }
+        }
+
+        // vertical win
+        Counter().apply {
+            for (x in top..bottom) {
+                if (count(board.grid[column][x], this)) return true
             }
         }
 
@@ -58,6 +82,6 @@ class Game (val win: Int, columns: Int, rows: Int) {
                 else if (cellWin(column, row)) return true
             }
         }
-        return false;
+        return false
     }
 }

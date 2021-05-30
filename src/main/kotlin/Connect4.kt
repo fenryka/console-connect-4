@@ -15,10 +15,12 @@ class Connect4 {
                 print ( "${players.activePlayer().name}: ")
                 players.apply {
                     activePlayer().move (readLine()!!.toInt())
+                    println (game)
+                    if (game.won()) {
+                        println ("${activePlayer().name} wins!!!!")
+                    }
                     next()
                 }
-
-                println (game.board)
             }
         }
     }

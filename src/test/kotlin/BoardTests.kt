@@ -70,7 +70,7 @@ class BoardTests {
     }
 
     /**
-     * Test we stop dopping if the column is full
+     * Test we stop dropping if the column is full
      */
     @Test
     fun dropper3() {

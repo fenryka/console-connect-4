@@ -1,7 +1,7 @@
 class Player (val name: String, val move: (Int) -> Boolean)
 
-class Players (val players: Array<Player>) {
-    var current = 0
+class Players (private val players: Array<Player>) {
+    private var current = 0
 
     fun activePlayer() = players[current]
 
