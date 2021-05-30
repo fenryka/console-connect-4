@@ -1,3 +1,5 @@
+import java.lang.NumberFormatException
+
 class Connect4 {
 
     companion object {
@@ -12,9 +14,16 @@ class Connect4 {
                     Player ("Player Two", game::playerTwoMove)))
 
             while (!game.won()) {
-                print ( "${players.activePlayer().name}: ")
                 players.apply {
-                    activePlayer().move (readLine()!!.toInt())
+                    while(true) {
+                        print ( "${activePlayer().name}: ")
+                        try {
+                            activePlayer().move(readLine()!!.toInt())
+                            break
+                        } catch (e: NumberFormatException) {
+                            println("A valid column number is required")
+                        }
+                    }
                     println (game)
                     if (game.won()) {
                         println ("${activePlayer().name} wins!!!!")
